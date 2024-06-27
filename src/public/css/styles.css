@@ -1,0 +1,646 @@
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+  body{
+    background-image: url("https://image.ibb.co/de6JzG/bitmap_1_1.png");
+    background-size:cover;
+    background-repeat:no-repeat;
+    background-position: center;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-family:"Montserrat", sans-serif;
+    height: 100vh;
+    margin: -20px 0 50;
+  }
+
+  html, body{
+    margin: 0;
+    padding: 0;
+    color: #1f4568;
+  }
+
+  .topnav {
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.topnav a.left {
+  float: left;
+}
+
+.topnav a.right {
+  float: right;
+}
+
+.topnav a {
+  float: left;
+  display: block;
+  color: #080707;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+.topnav a.active {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+@media screen and (max-width: 600px) {
+  .topnav a:not(:first-child) {display: none;}
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .topnav.responsive {position: relative;}
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+}
+
+  /* colors 8a3aff, 6f79ff, 3a9fff black-> 1f4568  grey->8198ae*/
+  .sect{
+    padding: 90px 0;
+    position: relative;
+  }
+
+  .sect--padding-top{
+    padding-top:90px;
+  }
+
+  .site{
+    text-align: center;
+  }
+  .site__title{
+    font-size: 30px;
+    margin: 0;
+    text-align: center;
+  }
+  
+  .site__subtitle{
+    font-size: 22px;
+    color: #8198ae;
+    margin: 15px 0 40px 0;
+    text-align: center;
+  }
+  
+  .site__img{
+    margin-top: 50px;
+    display: inline-block;
+    width: 77%;
+  }
+
+  .site__box-link{
+    margin-left: 15px;
+  }
+
+  .btn{
+    background-color:#3a9fff;
+    border-radius: 20px;
+    padding: 10px 25px;
+    color: #fff;
+    box-shadow: 0px 18px 13px -6px rgba(0, 0, 0,0.2);
+    transition: all 0.4s;
+    -webkit-transition: all 0.4s;
+    -moz-transition: all 0.4s;
+    -ms-transition: all 0.4s;
+    -o-transition: all 0.4s;
+  }
+
+  *{
+    box-sizing:border-box;
+  }
+
+  .sign-in-up-body{
+      display:flex;
+  }
+
+  h1{
+      font-weight:bold;
+      margin:0;
+  }
+
+  h2{
+    text-align: center;
+  }
+
+  p{
+      font-size:10px;
+      font-weight:100;
+      line-height: 20px;
+      letter-spacing: 0.5px;
+      margin:20px 0 30px;
+  }
+
+  span{
+      font-size:12px;
+  }
+
+  a{
+      color:#333;
+      font-size:14px;
+      text-decoration: none;
+      margin:15px 0;
+  }
+
+  button:active{
+      transform:scale(0.95);
+  }
+
+  button:focus{
+      outline:none;
+  }
+
+  button.ghost{
+      background-color: transparent;
+      border-color: #ffffff;
+  }
+
+  input{
+      background-color: #eee;
+      border:none;
+      padding:12px 15px;
+      margin: 8px 0;
+      width:100%;
+  }
+
+  .container{
+      background-color: #fff;
+      border-radius:10px;
+      box-shadow:0 14px 28px rgba(0, 0, 0,0.25),
+      0 10px 10px rgba(0, 0, 0,0.22);
+      position:relative;
+      overflow: hidden;
+      width:768px;
+      max-width:100%;
+      min-height: 480px;
+  }
+
+  .form-container{
+      position: absolute;
+      top:0;
+      height:100%;
+      transition: all 0.5s ease-in-out;
+  }
+
+  .sign-in-container{
+      left:0;
+      width:50%;
+      z-index:2;
+  }
+
+  .container.right-panel-active .sign-in-container{
+      transform: translateX(100%);
+  }
+
+  .sign-up-container{
+      left:0;
+      width:50%;
+      opacity: 0;
+      z-index:1;
+  }
+
+  .container.right-panel-active .sign-up-container{
+      transform: translateX(100%);
+      opacity: 1;
+      z-index: 5;
+      animation:show 0.5s;
+  }
+
+  @keyframes show{
+      0%, 49.99%{
+      opacity: 0;
+      z-index: 1;
+      }
+
+      50%, 100%{
+      opacity:1;
+      z-index:5;
+      }
+  }
+
+  .overlay-container{
+      position:absolute;
+      top:0;
+      left:50%;
+      width:50%;
+      height:100%;
+      overflow: hidden;
+      transition: transform 0.6s ease-in-out;
+      z-index:100;
+  }
+
+  .container.right-panel-active .overlay-container{
+      transform:translateX(-100%);
+  }
+
+  .overlay{
+      background-color: #5695e7;
+      background:-webkit-linear-gradient(to right #702ae0, #5695e7);
+      background:linear-gradient(to right,  #702ae0, #5695e7);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: 0 0;
+      color: #ffffff;
+      position: relative;
+      left: -100%;
+      height:100%;
+      width:200%;
+      transform:translateX(0);
+      transition: transform 0.6s ease-in-out;
+  }
+
+  .container.right-panel-active .overlay{
+      transform:translateX(50%)
+  }
+
+  .overlay-panel{
+      position:absolute;
+      display: flex;
+      align-items:center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 0 40px;
+      text-align: center;
+      top:0;
+      height:100%;
+      width:50%;
+      transform: translateX(0);
+      transition: transform 0.6s ease-in-out;
+  }
+
+  .overlay-left {
+      transform:translateX(-20%);
+  }
+
+  .container.right-panel-active .overlay-left{
+      transform: translateX(0);
+  }
+
+  .overlay-right{
+      right:0;
+      transform:translateX(0);
+  }
+
+  .container.right-panel-active .overlay-right{
+      transform: translateX(20%);
+
+  }
+
+  footer{
+    background-color: #222;
+    color: #fff;
+    font-size: 10px;
+    bottom:0;
+    position: fixed;
+    left:0;
+    right:0;
+    text-align: center;
+    z-index: 999;
+  }
+
+  footer p{
+    margin:10px 0;
+  }
+
+  .feedback-form-container {
+    width: 80%;
+    margin: 50px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+  /* FeedbackForm CSS */
+  .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background-color: transparent;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      color: #1f4568;
+  }
+
+  h1 {
+      color: #1f4568;
+  }
+
+  .form-group {
+      margin-bottom: 20px;
+  }
+
+  label {
+      font-weight: bold;
+  }
+  
+  input[type="text"],
+  textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+  }
+
+  textarea {
+      height: 150px;
+  }
+
+  .submit-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: #3a9fff;
+      color: #fff;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+  }
+
+  .submit-button:hover {
+      background-color: #1f4568;
+  }
+
+  /* UserHomepage.html CSS */
+  .content {
+    margin-top: 20px; /* Add spacing to the top */
+    margin-bottom: 20px; /* Add spacing to the bottom */
+  }
+  
+  .welcome {
+    margin-bottom: 10px; /* Add spacing below the welcome message */
+  }
+  
+  .eventList {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+
+  .createEventContainer {
+    width: calc(33.33% - 10px);
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .createEventCard {
+    width: calc(33.33% - 10px);
+    margin-right: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    position: relative; /* Position relative for absolute positioning of the "+" symbol */
+  }
+
+  .plus {
+    position: absolute;
+    top: 10px; /* Adjust the top position of the "+" symbol */
+    left: 50%; /* Position the "+" symbol at 50% from the left */
+    transform: translateX(-50%); /* Center the "+" symbol horizontally */
+    font-size: 48px; /* Increase the font size for a bigger "+" symbol */
+    color: #000;
+  }
+
+  .createEventCard .eventInfo {
+    text-align: center;
+    padding: 57px;
+  }
+
+  .createEventCard .eventInfo h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
+  .createEventCard .eventInfo p {
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  .createEventCard .eventImage {
+    height: 200px; /* Adjust as needed */
+    background-color: #ddd; /* Placeholder color */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .createEventCard .eventImage img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .createEventCard .eventStatus {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: bold;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+  }
+
+
+  .eventCard, .createEventContainer {
+      width: calc(33.33% - 10px); /* Adjust margin as needed */
+      margin-right: 10px; /* Adjust margin as needed */
+      margin-bottom: 20px;
+      position: relative;
+  }
+
+  .eventCard {
+      cursor: pointer;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .createEventContainer {
+      cursor: pointer;
+      border-radius: 5px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .createEventCard {
+      height: 100%; /* Ensure button takes up full height */
+  }
+
+  .eventImage {
+    position: relative;
+    width: 100%;
+    height: 150px; /* Adjust the height as needed */
+    overflow: hidden;
+  }
+
+  .eventImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .eventStatus {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 5px 10px;
+      color: #fff;
+      font-weight: bold;
+      border-radius: 5px;
+  }
+
+  .eventStatus.live {
+      background-color: #4CAF50;
+  }
+
+  .eventStatus.draft {
+      background-color: #2196F3;
+  }
+
+  .eventStatus.completed {
+      background-color: #f44336;
+  }
+
+  .eventInfo {
+      background-color: #fff;
+      padding: 20px;
+  }
+
+  .eventInfo h2 {
+      margin-top: 0;
+      margin-bottom: 10px;
+  }
+
+  .eventInfo p {
+      margin: 0;
+      line-height: 1.5;
+  }
+
+  /* User Profile Info CSS */
+  .profile-heading {
+    font-size: 24px;
+    color: #1f4568;
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  .profile-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    max-width: 400px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+  }
+
+  .profile-info {
+    width: 100%;
+  }
+
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.info-row span {
+    font-weight: bold;
+}
+
+.info-row span:first-child {
+    flex: 0 0 auto; /* Prevent shrinking */
+    width: 120px; /* Adjust width as needed */
+}
+
+.info-row span:last-child {
+    flex: 1; /* Take remaining space */
+}
+
+.edit-btn-container {
+    display: flex;
+    margin-left: 10px;
+}
+
+.edit-btn,
+.clear-btn {
+    background: none;
+    border: none;
+    color: #3a9fff;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 5px; /* Adjust margin as needed */
+}
+
+  .update-btn {
+    background-color: #3a9fff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .update-btn:hover {
+    background-color: #1f4568;
+  }
+
+  /* Alert design */
+  .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.alert-success {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+.alert-danger {
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+  

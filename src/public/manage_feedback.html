@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Feedback</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Add jsPDF script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Add SheetJS script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #333;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .navbar a.logout {
+            color: #d36363;
+            margin-left: 10px;
+        }
+
+        .navbar a:hover {
+            background-color: #555;
+        }
+
+        .dashboard-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-content h2 {
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .feedback-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .feedback-item {
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .feedback-item:last-child {
+            border-bottom: none;
+        }
+
+        .feedback-item strong {
+            color: #555;
+        }
+
+        .feedback-item i {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Pagination styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .pagination button.disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+
+        .dashboard-content button {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dashboard-content button:hover {
+            background-color: #0056b3;
+        }
+
+        .dashboard-content button:active {
+            background-color: #004080;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div>
+        <a href="/admin/dashboard">Admin Dashboard</a>
+    </div>
+    <div>
+        <a href="#">Manage Feedback</a>
+        <a href="/admin/profile_info">Profile Info</a>
+        <a href="/auth/admin/login" class="logout"><i class="fas fa-sign-out-alt"></i></a>
+    </div>
+</div>
+
+<div class="dashboard-content">
+    <h2>Manage Feedback</h2>
+    <h3>Feedback List</h3>
+    <button onclick="downloadReport('pdf')">Download Report as PDF</button>
+    <button onclick="downloadReport('excel')">Download Report as Excel</button>
+    <ul class="feedback-list" id="feedback-list">
+        <!-- Feedback items will be inserted here dynamically -->
+    </ul>
+    <div class="pagination" id="pagination-controls">
+        <!-- Pagination controls will be inserted here dynamically -->
+    </div>
+</div>
+
+<!-- The Modal -->
+<div id="feedbackModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3 id="modal-title"></h3>
+        <p id="modal-description"></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        fetchFeedback(1); // Load the first page of feedback
+    });
+
+    // Function to fetch feedback submissions with pagination
+    function fetchFeedback(page) {
+        fetch(`/api/feedback?page=${page}&limit=5`)
+            .then(response => response.json())
+            .then(data => {
+                const feedbackList = document.getElementById('feedback-list');
+                feedbackList.innerHTML = ''; // Clear any existing content
+
+                data.feedbacks.forEach((feedback, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'feedback-item';
+                    listItem.innerHTML = `
+                        <div>
+                            <strong>${(page - 1) * 5 + index + 1}. Title:</strong> ${feedback.title}<br>
+                            <strong>Date:</strong> ${new Date(feedback.submitDate).toLocaleDateString()}
+                        </div>
+                        <i class="fas fa-eye" onclick="viewFeedback('${feedback._id}')"></i>
+                    `;
+                    feedbackList.appendChild(listItem);
+                });
+
+                // Update pagination controls
+                updatePaginationControls(data.currentPage, data.totalPages);
+            })
+            .catch(error => {
+                console.error('Error fetching feedback:', error);
+            });
+    }
+
+    // Function to update pagination controls
+    function updatePaginationControls(currentPage, totalPages) {
+        const paginationControls = document.getElementById('pagination-controls');
+        paginationControls.innerHTML = ''; // Clear any existing controls
+
+        for (let page = 1; page <= totalPages; page++) {
+            const button = document.createElement('button');
+            button.innerText = page;
+            button.className = page === currentPage ? 'disabled' : '';
+            button.disabled = page === currentPage;
+            button.onclick = () => fetchFeedback(page);
+            paginationControls.appendChild(button);
+        }
+    }
+
+    // Function to view feedback details
+    function viewFeedback(feedbackId) {
+        fetch(`/api/feedback/${feedbackId}`)
+            .then(response => response.json())
+            .then(feedback => {
+                document.getElementById('modal-title').innerText = feedback.title;
+                document.getElementById('modal-description').innerText = feedback.description;
+                document.getElementById('feedbackModal').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching feedback details:', error);
+            });
+    }
+
+    // Get the modal
+    const modal = document.getElementById('feedbackModal');
+
+    // Get the <span> element that closes the modal
+    const span = document.getElementsByClassName('close')[0];
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Function to download the feedback list as PDF or Excel
+    function downloadReport(format) {
+        fetch('/api/feedback?limit=1000') // Adjust the limit as needed
+            .then(response => response.json())
+            .then(data => {
+                if (format === 'pdf') {
+                    downloadPDF(data.feedbacks);
+                } else if (format === 'excel') {
+                    downloadExcel(data.feedbacks);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching feedback:', error);
+            });
+    }
+
+    // Function to download feedback as PDF
+    function downloadPDF(feedbacks) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.text("Feedback Report", 10, 10);
+
+        feedbacks.forEach((feedback, index) => {
+            const y = 20 + (index * 10);
+            const lines = doc.splitTextToSize(`Title: ${feedback.title}\nDate: ${new Date(feedback.submitDate).toLocaleDateString()}\nDescription: ${feedback.description}`, 180);
+            doc.text(lines, 10, y);
+            if (index < feedbacks.length - 1) {
+                doc.addPage();
+            }
+        });
+
+        doc.save('feedback_report.pdf');
+    }
+
+    // Function to download feedback as Excel
+    function downloadExcel(feedbacks) {
+        const worksheet = XLSX.utils.json_to_sheet(feedbacks.map(feedback => ({
+            Title: feedback.title,
+            Date: new Date(feedback.submitDate).toLocaleDateString(),
+            Description: feedback.description
+        })));
+
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Feedback");
+
+        XLSX.writeFile(workbook, 'feedback_report.xlsx');
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        p{
+            font-size: 11px;
+        }
+    </style>
+    <title>User Homepage</title>
+</head>
+<body>
+    <div class="topnav" id="myTopnav">
+        <a href="/user_dashboard" class="active left">Home</a>
+        <a href="javascript:void(0);" class="right" onclick="confirmLogout()">Logout</a>
+        <a href="/user_feedback" class="right">Submit Feedback</a>
+        <a href="/create_event" class="right">Create New Event</a>
+        <a href="/user_profile" class="right">User Info</a>
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <div>
+        <div class="content">
+            <div class="welcome">
+                <h1 style="text-align: center;">Welcome <span style="font-size: 28px;" id="usernamePlaceholder"></span>!</h1>
+            </div>
+            <h1 style="margin-bottom: 10px;">My Events</h1>
+            <div class="eventList" id="eventList">
+                <!-- Create Event Button -->
+                <div class="createEventContainer" onclick="navigateToCreateEvent()">
+                    <div class="eventCard createEventCard">
+                        <div class="plus">+</div> <!-- Add the "+" symbol here -->
+                        <div class="eventInfo">
+                            <h2>Create Event</h2>
+                            <p>Click here to create a new event</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./javascript/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetchUserData();
+            fetchUserEvents();
+        
+            function fetchUserData() {
+                fetch("/api/auth/status")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.username) {
+                            document.getElementById("usernamePlaceholder").innerText = data.username;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem fetching user data:', error);
+                    });
+            }
+        
+            function fetchUserEvents() {
+                fetch("/api/events")
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(events => {
+                        const eventList = document.getElementById("eventList");
+                        events.forEach(event => {
+                            const eventCard = createEventCard(event);
+                            eventList.appendChild(eventCard);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('There was a problem fetching events:', error);
+                    });
+            }
+        
+            function createEventCard(event) {
+                const eventCard = document.createElement('div');
+                eventCard.className = 'eventCard';
+                eventCard.onclick = () => navigateToEventDetails(event._id);
+        
+                const eventImage = document.createElement('div');
+                eventImage.className = 'eventImage';
+        
+                const img = document.createElement('img');
+                img.src = event.coverImage;
+                img.alt = 'Event Image';
+                eventImage.appendChild(img);
+        
+                const eventStatus = document.createElement('div');
+                eventStatus.className = `eventStatus ${event.status}`;
+                eventStatus.textContent = event.status.toUpperCase();
+                eventImage.appendChild(eventStatus);
+        
+                const eventInfo = document.createElement('div');
+                eventInfo.className = 'eventInfo';
+        
+                const eventTitle = document.createElement('h2');
+                eventTitle.textContent = event.title;
+                eventInfo.appendChild(eventTitle);
+        
+                const eventDate = document.createElement('p');
+                eventDate.textContent = `Date: ${new Date(event.start).toLocaleDateString()}`;
+                eventInfo.appendChild(eventDate);
+        
+                const eventTime = document.createElement('p');
+                eventTime.textContent = `Time: ${new Date(event.start).toLocaleTimeString()}`;
+                eventInfo.appendChild(eventTime);
+        
+                eventCard.appendChild(eventImage);
+                eventCard.appendChild(eventInfo);
+        
+                return eventCard;
+            }
+        
+            function navigateToEventDetails(eventId) {
+                window.location.href = `/event_page/${eventId}`;
+            }
+        
+            window.navigateToCreateEvent = function() {
+                window.location.href = '/create_event';
+            };
+
+            window.confirmLogout = function() {
+                if (confirm('Are you sure you want to logout?')) {
+                    logout();
+                }
+            };
+
+            function logout() {
+                fetch('/api/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/user_login_signup_form.html';
+                    } else {
+                        alert('Logout failed. Please try again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error logging out:', error);
+                });
+            }
+        });
+    </script>        
+</body>
+</html>

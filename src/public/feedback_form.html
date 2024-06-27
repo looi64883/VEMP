@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>Feedback Form</title>
+</head>
+<body>
+    <a href="/user_dashboard" class="back-button" onclick="clearFeedbackForm()">Back</a>
+    <div class="feedback-form-container">
+        <h1 style="text-align:center">Feedback Form</h1>
+        <form id="feedbackForm" action="">
+            <div class="form-group">
+                <label for="feedbackTitle">Title :</label>
+                <input type="text" id="feedbackTitle" name="feedbackTitle" required>
+            </div>
+            <div class="form-group">
+                <label for="feedbackDescription">Description :</label>
+                <textarea id="feedbackDescription" name="feedbackDescription" required></textarea>
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+    <script src="./javascript/script.js"></script>
+
+    <script>
+
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        document.querySelector('.submit-button').addEventListener('click', async (event) => {
+            event.preventDefault(); // Prevent default form submission
+            
+            let title = document.getElementById('feedbackTitle').value;
+            let description = document.getElementById('feedbackDescription').value;
+
+            console.log("submitting this data", title, description)
+
+            let response = await postData('/api/submit/feedback', { title, description });
+
+            console.log(response);
+                    
+            // Check response status
+            if (response.success) {
+                alert(response.message);
+
+                clearFeedbackForm();
+            } else {
+                alert(response.message);
+            }
+
+        });
+
+        function clearFeedbackForm() {
+            document.getElementById('feedbackTitle').value = '';
+            document.getElementById('feedbackDescription').value = '';
+        }
+    </script>
+
+</body>
+</html>
+

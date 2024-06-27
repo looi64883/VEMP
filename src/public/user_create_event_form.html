@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        input[type="text"],
+        input[type="file"],
+        input[type="datetime-local"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .datetime-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .datetime-group .form-group {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .datetime-group .form-group input[type="datetime-local"] {
+            width: auto;
+            align-self: flex-start;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .button-group .submit-button {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-form-container">
+        <button class="back-button" onclick="goBack()">&lt; Back</button>
+        <h1 style="text-align: center; margin-bottom: 10px;">Create An Event</h1>
+        <form id="createEventForm">
+            <h1 style="text-align: center; font-size: 24px; margin-bottom: 10px;" >Event title and description</h1>
+            <div class="form-group">
+                <label for="eventName">Event Title</label>
+                <input type="text" id="eventName" name="eventName" placeholder="Enter event title" required>
+            </div>
+            <div class="form-group">
+                <label for="eventType">Event Type</label>
+                <select id="eventType" name="eventType">
+                    <option value="conference">Conference</option>
+                    <option value="virtual">Virtual Event</option>
+                    <option value="exhibit">Exhibit</option>
+                    <option value="webinar">Webinar</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="datetime-group">
+                <div class="form-group">
+                    <label for="eventStart">Event Starts</label>
+                    <input type="datetime-local" id="eventStart" name="eventStart" required>
+                </div>
+                <div class="form-group">
+                    <label for="eventEnd">Event Ends</label>
+                    <input type="datetime-local" id="eventEnd" name="eventEnd" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="eventCover">Add a cover image for your event</label>
+                <input type="file" id="eventCover" name="eventCover" accept="image/*">
+            </div>
+            <div class="form-group">
+                <label for="eventDescription">Event Description</label>
+                <textarea id="eventDescription" name="eventDescription" placeholder="Enter event description" required></textarea>
+            </div>
+            <div class="button-group">
+                <button type="button" class="submit-button save-button" onclick="saveAndFinishLater()">Save and Finish Later</button>
+                <button type="submit" class="submit-button">Save and Continue</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            const eventStart = document.getElementById('eventStart');
+            const eventEnd = document.getElementById('eventEnd');
+
+            // Set minimum start date to now
+            const now = new Date();
+            const formattedNow = now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+            eventStart.min = formattedNow;
+
+            eventStart.addEventListener('change', function() {
+                eventEnd.value = '';
+                eventEnd.min = eventStart.value;
+            });
+        });
+    </script>
+</body>
+</html>

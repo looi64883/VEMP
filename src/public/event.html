@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Event</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <style>
+        input[type="text"],
+        input[type="file"],
+        input[type="datetime-local"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
+        }
+
+        .datetime-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .datetime-group .form-group {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .datetime-group .form-group input[type="datetime-local"] {
+            width: auto;
+            align-self: flex-start;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .button-group .submit-button {
+            width: 48%;
+        }
+
+        .budget-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .budget-input-group .form-group {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .budget-input-group button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .budget-input-group button:hover {
+            background-color: #e0e0e0;
+        }
+
+        .budget-list {
+            margin-top: 20px;
+        }
+
+        .budget-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .budget-list ul li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .budget-list ul li .edit-buttons {
+            margin-left: 20px;
+        }
+
+        .budget-list ul li .edit-buttons button {
+            margin-left: 5px;
+        }
+
+        .registration-limit-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .registration-limit-group .form-group {
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        .registration-limit-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="feedback-form-container">
+        <button class="back-button" onclick="goBack()">&lt; Back</button>
+        <h1 style="text-align: center;">Create An Event</h1>
+
+        <!-- First Form -->
+        <form id="createEventForm" enctype="multipart/form-data" method="post" action="/save-event">
+            <div class="form-group">
+                <label for="title">Event Title</label>
+                <input type="text" id="title" name="title" placeholder="Enter event title (example: Tech conference 2024)" required>
+            </div>
+            <div class="form-group">
+                <label for="type">Event Type</label>
+                <select id="type" name="type">
+                    <option value="select">Select</option>
+                    <option value="conference">Conference</option>
+                    <option value="virtual">Virtual Event</option>
+                    <option value="exhibit">Exhibit</option>
+                    <option value="webinar">Webinar</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="datetime-group">
+                <div class="form-group">
+                    <label for="start">Event Starts</label>
+                    <input type="datetime-local" id="start" name="start" required>
+                </div>
+                <div class="form-group">
+                    <label for="end">Event Ends</label>
+                    <input type="datetime-local" id="end" name="end" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="coverImage">Add a cover image for your event</label>
+                <input type="file" id="coverImage" name="coverImage" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Event Description</label>
+                <textarea id="description" name="description" placeholder="Enter the description of your event - agenda, speakers from past events, sponsor information etc." required></textarea>
+            <!-- </div>
+                <div>
+                <h2 style="text-align: center;">Event Budget and Registration</h2>
+                <div class="budget-input-group">
+                    <div class="form-group">
+                        <label for="budgetItem">Event Budget</label>
+                        <input type="text" id="budgetItem" name="budgetItem" placeholder="Enter budget item">
+                    </div>
+                    <div class="form-group">
+                        <label for="budgetPrice">Budget Price</label>
+                        <input type="number" id="budgetPrice" name="budgetPrice" placeholder="Enter budget price">
+                    </div>
+                    <button type="button" onclick="addBudgetItem()">+</button>
+                </div>
+
+                <div class="budget-list">
+                    <ul id="budgetList">
+                    </ul>
+                </div>
+                <div class="registration-limit-group">
+                    <div class="form-group">
+                        <label for="registrationLimit">Registration Limit</label>
+                        <input type="number" id="registrationLimit" name="registrationLimit" placeholder="Enter registration limit" min="1">
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" id="unlimitedRegistration" name="unlimitedRegistration">
+                        <label for="unlimitedRegistration">Tick here for no limited register attendees</label>
+                    </div>
+                </div>
+            </div> -->
+            <div style="text-align: center; margin-bottom: 10px;">
+                <label for="readyPublish">Ready to Publish?</label>
+            </div>
+            <div class="button-group">
+                <button type="button" class="submit-button" id="cancel-btn">No, Cancel</button>
+                <button type="submit" class="submit-button save-button">Yes, Save and Publish</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const eventStart = document.getElementById('start');
+            const eventEnd = document.getElementById('end');
+            // const registrationLimit = document.getElementById('registrationLimit');
+            // const unlimitedRegistration = document.getElementById('unlimitedRegistration');
+
+            // Set minimum start date to now
+            const now = new Date();
+            const formattedNow = now.toISOString().slice(0, 16); // YYYY-MM-DDTHH:MM
+            eventStart.min = formattedNow;
+
+            eventStart.addEventListener('change', function() {
+                eventEnd.value = '';
+                eventEnd.min = eventStart.value;
+            });
+
+            // // Disable/Enable registration limit based on checkbox
+            // unlimitedRegistration.addEventListener('change', function() {
+            //     registrationLimit.disabled = this.checked;
+            //     if (this.checked) {
+            //         registrationLimit.value = '';
+            //     }
+            // });
+
+        });
+
+        const cancelBtn = document.getElementById('cancel-btn');
+        
+        cancelBtn.addEventListener('click', function() {
+                console.log("Cancel button clicked");
+                window.location.href = '/user_dashboard';
+            });
+
+        function showBudgetForm() {
+            const createEventForm = document.getElementById('createEventForm');
+            const eventBudgetForm = document.getElementById('eventBudgetForm');
+            createEventForm.classList.add('hidden');
+            eventBudgetForm.classList.remove('hidden');
+        }
+
+        function addBudgetItem() {
+            const budgetItem = document.getElementById('budgetItem').value;
+            const budgetPrice = document.getElementById('budgetPrice').value;
+
+            if (budgetItem && budgetPrice) {
+                const budgetList = document.getElementById('budgetList');
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <span style='font-size: 14px'>${budgetItem}: RM${budgetPrice}</span>
+                    <div class="edit-buttons">
+                        <button class="edit-btn" onclick="editBudgetItem(this)">Edit</button>
+                        <button class="clear-btn" onclick="deleteBudgetItem(this)">Delete</button>
+                    </div>
+                `;
+                budgetList.appendChild(listItem);
+
+                // Clear the input fields
+                document.getElementById('budgetItem').value = '';
+                document.getElementById('budgetPrice').value = '';
+            } else {
+                alert('Please enter both budget item and price.');
+            }
+        }
+
+        function deleteBudgetItem(button) {
+            const listItem = button.parentNode.parentNode;
+            listItem.remove();
+        }
+
+        function editBudgetItem(button) {
+            const listItem = button.parentNode.parentNode;
+            const span = listItem.querySelector('span');
+            const [budgetItem, budgetPrice] = span.textContent.split(': RM');
+
+            document.getElementById('budgetItem').value = budgetItem.trim();
+            document.getElementById('budgetPrice').value = budgetPrice.trim();
+            listItem.remove();
+        }
+
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        document.getElementById('createEventForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const form = event.target;
+            const formData = new FormData(form);
+
+            // Validate form
+            for (let [key, value] of formData.entries()) {
+                if (!value) {
+                    alert('Please fill out all fields');
+                    return;
+                }
+            }
+
+            // Send data to the backend
+            try {
+                const response = await fetch('/api/save_event', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Event saved successfully');
+                    window.location.href = '/user_dashboard';
+                    // showBudgetForm();
+                } else {
+                    alert('Failed to save event: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error saving event');
+            }
+        });
+    </script>
+</body>
+</html>

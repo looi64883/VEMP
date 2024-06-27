@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Event</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .join-event {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .join-event h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .join-event .form-group {
+            margin-bottom: 20px;
+        }
+
+        .join-event label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .join-event input[type="email"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .join-event button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .join-event button:hover {
+            background-color: #0056b3;
+        }
+
+        .join-event p {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .join-event a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .join-event a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <section id="join-event" class="join-event">
+        <h2>Already registered for this event?</h2>
+        <div class="form-group">
+            <label for="email">Enter your email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+        </div>
+        <button type="button" id="proceedButton">Proceed</button>
+        <p id="message" style="color: red;"></p>
+        <p>Not yet registered for the event? <a id="registerLink" href="#">Click here to register now</a></p>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const eventId = window.location.pathname.split('/').pop();
+            const registerLink = document.getElementById('registerLink');
+
+            if (eventId) {
+                registerLink.href = `/registration/${eventId}`;
+            }
+
+            const emailInput = document.getElementById('email');
+            const proceedButton = document.getElementById('proceedButton');
+            const messageElement = document.getElementById('message');
+
+            proceedButton.addEventListener('click', () => {
+                const email = emailInput.value;
+
+                if (email) {
+                    fetch(`/api/check-registration/${eventId}`, { // Modified endpoint to check registration
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email })
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        const displayName = data.displayName;
+                        if (displayName) {
+                            window.location.href = `/video_conference/${eventId}?displayName=${displayName}`;
+                        } else {
+                            messageElement.textContent = 'Attendee name not found.';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        messageElement.textContent = 'An error occurred. Please try again later.';
+                    });
+                } else {
+                    messageElement.textContent = 'Please enter your email.';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

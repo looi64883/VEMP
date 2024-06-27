@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <!-- Add SheetJS script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+    <nav class="sidebar close">
+        <header>
+            <div class="image-text">
+                <span class="image">
+                    <img src="" alt="logo" id="eventimage">
+                </span>
+
+                <div class="text header-text">
+                    <span class="name">Event</span>
+                    <span class="profession">Details</span>
+                </div>
+            </div>
+            <i class='bx bx-chevron-right toggle'></i>
+        </header>
+
+        <div class="menu-bar">
+            <div class="menu">
+                <!-- <li class="search-box">
+                        <i class="bx bx-search icon"></i>
+                        <input type="text" placeholder="Search...">
+                </li> -->
+
+                <ul class="menu-links">
+                    <li class="nav-link">
+                        <a href="/user_dashboard">
+                            <i class='bx bx-chevrons-left icon'></i>
+                            <span class="text nav-text">Events</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#overview">
+                            <i class='bx bx-receipt icon'></i>
+                            <span class="text nav-text">Overview</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#manage-attendees">
+                            <i class='bx bx-user icon'></i>
+                            <span class="text nav-text">Manage Attendees</span>
+                        </a>
+                    </li>
+                    <li class="nav-link">
+                        <a href="#custom-virtual-event">
+                            <i class='bx bx-slideshow icon'></i>
+                            <span class="text nav-text">Custom Virtual Event</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="buttom-content">
+                <li class="">
+                    <a href="#" id="logoutButton">
+                        <i class='bx bx-log-out icon' ></i>
+                        <span class="text nav-text">Logout</span>
+                    </a>
+                </li>
+                <li class="mode">
+                    <div class="moon-sun">
+                        <i class='bx bx-moon icon moon' ></i>
+                        <i class='bx bx-sun icon sun' ></i>
+                    </div>
+                    <span class="mode-text text">Dark Mode</span>
+
+                    <div class="toggle-switch">
+                        <span class="switch"></span>
+                    </div>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <section class="home" id="overview">
+        <h2 style="margin-bottom: 30px;">Overview</h2>
+        <div class="event-details">
+            <div class="details-container">
+                <div class="status" id="eventStatus"></div>
+                <h2 class="title" id="eventTitle"></h2>
+                <div class="starts" id="eventStarts"></div>
+                <div class="registration-url">
+                    <span>Registration URL</span>
+                    <input type="text" id="registrationURL" class="search-box" disabled>
+                    <button id="copyButton"><i class="bx bx-copy"></i></button>
+                </div>
+            </div>
+            <div class="button-container">
+                <button id="previewButton">Preview Registration Link</button>
+                <button id="publishButton">Publish the Event</button>
+                <button id="unpublishButton">Unpublish the Event</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Manage Attendees section -->
+    <section id="manage-attendees" class="home manage-attendees" style="display: none;">
+        <h2 style="margin-bottom: 20px;">Manage Attendees</h2>
+    
+        <div class="attendee-section">
+            <h2>Attendees List</h2>
+            <div class="add-attendee-section" style="margin-bottom: 20px;">
+                <button id="addAttendeeButton" class="add-attendee-button">Add Attendee</button>
+                <button id="downloadAttendeesButton" class="download-attendees-button">Download Report</button>
+            </div>
+            <ul id="attendeesList" class="attendees-list">
+                <!-- Attendees will be dynamically added here -->
+            </ul>
+            <p id="noAttendeesMessage" class="no-attendees-message">Sorry, no registrations yet!</p>
+        </div>
+    </section>
+
+
+    <!-- Custom Virtual Event section -->
+    <section id="custom-virtual-event" class="home custom-virtual-event" style="display: none;">
+        <h2 style="margin-bottom: 20px;">Custom Virtual Event</h2>
+        <div class="form-group" style="margin-bottom: 20px;">
+            <h2 style="display: inline-block; margin-bottom: 20px;">Set up your Event lobby</h2>
+            <button type="button" id="previewLobbyButton" style="display: inline-block; vertical-align: middle; margin-left: 0px;">Preview Virtual Event Lobby</button>
+        </div>
+
+        <div class="event-url">
+            <span>Event Lobby URL</span>
+            <input type="text" id="eventURL" class="search-box" disabled>
+            <button id="eventCopyButton"><i class="bx bx-copy"></i></button>
+        </div>
+    
+        <form id="eventLobbyForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="welcomeHeadline">Welcome headline:</label>
+                <input type="text" id="welcomeHeadline" name="welcomeHeadline" placeholder="Enter welcome headline" required>
+            </div>
+    
+            <div class="form-group">
+                <label for="briefIntroduction">Brief introduction:</label>
+                <textarea id="briefIntroduction" name="briefIntroduction" placeholder="Enter brief introduction" required></textarea>
+            </div>
+    
+            <div class="form-group">
+                <label for="eventLobbyCoverImage">Cover image:</label>
+                <input type="file" id="eventLobbyCoverImage" name="eventLobbyCoverImage" accept="image/*">
+                <small>(Supported file formats: JPG, PNG, GIF)</small>
+            </div>
+    
+            <div class="form-group">
+                <label for="eventLogo">Logo:</label>
+                <input type="file" id="eventLogo" name="eventLogo" accept="image/*">
+                <small>(Supported file formats: JPG, PNG, GIF)</small>
+            </div>
+    
+            <button type="submit">Save Settings</button>
+        </form>
+        <div id="imagePreviewContainer">
+            <h3 style="margin-top: 30px;">Image Previews:</h3>
+            <div id="coverImagePreview" style="display: none;">
+                <h4>Cover Image</h4>
+                <img id="coverImageElement" src="#" alt="Cover Image Preview">
+            </div>
+            <div id="logoPreview" style="display: none;">
+                <h4>Event Logo</h4>
+                <img id="logoElement" src="#" alt="Event Logo Preview">
+            </div>
+        </div>
+    </section>
+
+    <!-- Attendee Modal -->
+    <div id="attendeeModal" class="modal">
+        <div class="modal-content">
+            <span id="modalCloseButton" class="modal-close">&times;</span>
+            <h2>Registration Information</h2>
+            <form id="modalForm">
+                <label for="nameInput">Attendee Name:</label>
+                <input type="text" id="nameInput" name="nameInput" required>
+                <label for="emailInput">Attendee email address:</label>
+                <input type="email" id="emailInput" name="emailInput" required>
+                <button type="submit">Add Attendee</button>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+            const body = document.querySelector("body"),
+        sidebar = body.querySelector(".sidebar"),
+        toggle = body.querySelector(".toggle"),
+        searchBtn = body.querySelector(".search-box"),
+        modeSwitch = body.querySelector(".toggle-switch"),
+        modeText = body.querySelector(".mode-text");
+
+        toggle.addEventListener("click", () => {
+            sidebar.classList.toggle("close");
+        });
+
+        searchBtn.addEventListener("click", () => {
+            sidebar.classList.remove("close");
+        });
+
+        modeSwitch.addEventListener("click", () => {
+            body.classList.toggle("dark");
+
+            if(body.classList.contains("dark")){
+                modeText.innerText = "Light Mode"
+            }else{
+                modeText.innerText = "Dark Mode"
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const eventId = window.location.pathname.split('/').pop();
+            fetchEventDetails(eventId);
+
+            fetchAndDisplayAttendees(eventId);
+
+            // Modal element
+            const modal = document.getElementById("attendeeModal");
+
+            // 
+            
+            async function fetchAndDisplayAttendees(eventId) {
+                try {
+                    const response = await fetch(`/api/attendees/${eventId}`);
+                    const attendees = await response.json();
+
+                    const attendeesList = document.getElementById("attendeesList");
+                    attendeesList.innerHTML = ''; // Clear existing list
+
+                    const noAttendeesMessage = document.getElementById("noAttendeesMessage");
+                    noAttendeesMessage.style.display = attendees.length === 0 ? 'block' : 'none';
+
+                    attendees.forEach((attendee, index) => {
+                        const listItem = document.createElement('li');
+
+                        const indexSpan = document.createElement('span');
+                        indexSpan.classList.add('index');
+                        indexSpan.textContent = `${index + 1}.`;
+
+                        const nameSpan = document.createElement('span');
+                        nameSpan.textContent = attendee.name;
+
+                        const emailSpan = document.createElement('span');
+                        emailSpan.textContent = attendee.email;
+
+                        listItem.appendChild(indexSpan);
+                        listItem.appendChild(nameSpan);
+                        listItem.appendChild(emailSpan);
+                        attendeesList.appendChild(listItem);
+                    });
+                } catch (error) {
+                    console.error('Error fetching attendees:', error);
+                    alert('An error occurred while fetching attendees. Please try again later.');
+                }
+            }
+
+            function fetchEventDetails(eventId) {
+                fetch(`/api/events/${eventId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(event => {
+                        displayEventDetails(event);
+                        populateEventLobbyForm(event);
+                    })
+                    .catch(error => {
+                        console.error('There was a problem fetching event details:', error);
+                    });
+            }
+
+            function showModal() {
+                modal.style.display = 'block';
+            }
+
+            function hideModal() {
+                modal.style.display = 'none';
+            }
+
+            const addAttendeeButton = document.getElementById("addAttendeeButton");
+            addAttendeeButton.addEventListener("click", showModal);
+
+            const modalCloseButton = document.getElementById("modalCloseButton");
+            modalCloseButton.addEventListener("click", hideModal);
+
+            // Add event listener to the form submit event inside the modal
+            const modalForm = document.getElementById("modalForm");
+            modalForm.addEventListener("submit", async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                const eventId = window.location.pathname.split('/').pop(); // Extract event ID from URL
+                const name = document.getElementById('nameInput').value.trim();
+                const email = document.getElementById('emailInput').value.trim();
+
+                if (!name || !email) {
+                    alert('Please fill in all fields.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/register/event', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: name,
+                            email: email,
+                            eventId: eventId
+                        })
+                    });
+
+                    const responseData = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(responseData.message);
+                    }
+
+                    // Show appropriate message based on success
+                    alert(responseData.message);
+
+                    // Clear form inputs after successful registration
+                    document.getElementById('nameInput').value = '';
+                    document.getElementById('emailInput').value = '';
+
+                    // Hide the modal after registration
+                    hideModal();
+                    fetchAndDisplayAttendees(eventId);
+                } catch (error) {
+                    console.error('Error during attendee registration:', error.message);
+                    alert(error.message);
+                }
+            });
+
+
+            function displayEventDetails(event) {
+                const statusBox = document.getElementById("eventStatus");
+                statusBox.textContent = event.status.toUpperCase();
+                updateStatusBoxColor(statusBox, event.status);
+
+                const titleElement = document.getElementById("eventTitle");
+                titleElement.textContent = event.title;
+
+                const startsElement = document.getElementById("eventStarts");
+                startsElement.textContent = "Starts: " + new Date(event.start).toLocaleString();
+
+                const registrationURLInput = document.getElementById("registrationURL");
+                registrationURLInput.value = `localhost:3000/registration/${eventId}`;
+
+                const copyButton = document.getElementById("copyButton");
+                copyButton.addEventListener("click", () => {
+                    copyTextToClipboard(registrationURLInput.value, copyButton);
+                });
+
+                const publishButton = document.getElementById("publishButton");
+                const unpublishButton = document.getElementById("unpublishButton");
+
+                if (event.status === 'draft') {
+                    publishButton.style.display = 'block';
+                    unpublishButton.style.display = 'none';
+                    publishButton.addEventListener("click", () => {
+                        updateEventStatus(eventId, 'live');
+                    });
+                } else if (event.status === 'live') {
+                    publishButton.style.display = 'none';
+                    unpublishButton.style.display = 'block';
+                    unpublishButton.addEventListener("click", () => {
+                        updateEventStatus(eventId, 'draft');
+                    });
+                }
+
+                // Preview button event listener
+                const previewButton = document.getElementById("previewButton");
+                previewButton.addEventListener("click", () => {
+                    const registrationURL = document.getElementById("registrationURL").value;
+                    // Open a new tab with the registration URL after a slight delay
+                    setTimeout(() => {
+                        window.open(registrationURL, "_blank");
+                    }, 100);
+                });
+
+                const eventCopyButton = document.getElementById("eventCopyButton");
+                eventCopyButton.addEventListener("click", () => {
+                    copyEventTextToClipboard(eventURL.value);
+                });
+
+                // Preview button event listener
+                const previewLobbyButton = document.getElementById("previewLobbyButton");
+                previewLobbyButton.addEventListener("click", () => {
+                    const eventURL = document.getElementById("eventURL").value;
+                    // Open a new tab with the registration URL after a slight delay
+                    setTimeout(() => {
+                        window.open(eventURL, "_blank");
+                    }, 100);
+                });
+
+            }
+
+            function updateEventStatus(eventId, newStatus) {
+                fetch(`/api/events/${eventId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(updatedEvent => {
+                    const statusBox = document.getElementById("eventStatus");
+                    statusBox.textContent = updatedEvent.status.toUpperCase();
+                    updateStatusBoxColor(statusBox, updatedEvent.status);
+
+                    const publishButton = document.getElementById("publishButton");
+                    const unpublishButton = document.getElementById("unpublishButton");
+
+                    if (updatedEvent.status === 'draft') {
+                        publishButton.style.display = 'block';
+                        unpublishButton.style.display = 'none';
+                    } else if (updatedEvent.status === 'live') {
+                        publishButton.style.display = 'none';
+                        unpublishButton.style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem updating the event status:', error);
+                });
+            }
+
+            function copyTextToClipboard(text, button) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        const copyButton = document.getElementById("copyButton");
+                        copyButton.innerHTML = "<i class='bx bx-check'></i>";
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                    });
+            }
+
+            function copyEventTextToClipboard(text) {
+                navigator.clipboard.writeText(text)
+                    .then(() => {
+                        const copyButton = document.getElementById("eventCopyButton");
+                        copyButton.innerHTML = "<i class='bx bx-check'></i>";
+                    })
+                    .catch(err => {
+                        console.error('Could not copy text: ', err);
+                    });
+            }
+
+            function updateStatusBoxColor(statusBox, status) {
+                statusBox.className = 'status'; // Reset class
+                statusBox.classList.add("status-" + status.toLowerCase()); // Add class for styling
+            }
+
+            // Function to toggle the visibility of sections
+            function toggleSection(sectionId) {
+                // Hide all sections
+                const sections = document.querySelectorAll('section');
+                sections.forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // Show the selected section
+                const selectedSection = document.getElementById(sectionId);
+                selectedSection.style.display = 'block';
+            }
+
+            // Event listener for the navigation links
+            const navLinks = document.querySelectorAll('.nav-link a');
+            navLinks.forEach(link => {
+                link.addEventListener("click", function(event) {
+                    // Get the href attribute of the clicked link
+                    const href = link.getAttribute('href');
+
+                    // Check if the link navigates to a different page
+                    if (href.startsWith('/')) {
+                        // Allow default navigation behavior for links to different pages
+                        return;
+                    }
+
+                    event.preventDefault(); // Prevent default link behavior
+
+                    // Get the section ID from the link's href attribute
+                    const sectionId = href.replace('#', '');
+
+                    // Toggle the visibility of sections
+                    toggleSection(sectionId);
+                });
+            });
+
+            function populateEventLobbyForm(event) {
+                document.getElementById('welcomeHeadline').value = event.welcomeHeadline || '';
+                document.getElementById('briefIntroduction').value = event.briefIntro || '';
+                if (event.eventLobbyCoverImage) {
+                    const coverImageElement = document.getElementById("coverImageElement");
+                    coverImageElement.src = event.eventLobbyCoverImage;
+                    document.getElementById("coverImagePreview").style.display = 'block';
+                    coverImageElement.style.width = '300px'; // Set width
+                    coverImageElement.style.height = '200px'; // Set height
+                }
+                if (event.eventLogo) {
+                    const logoElement = document.getElementById("logoElement");
+                    logoElement.src = event.eventLogo;
+                    document.getElementById("logoPreview").style.display = 'block';
+                    logoElement.style.width = '300px'; // Set width
+                    logoElement.style.height = '200px'; // Set height
+                }
+                if (!event.eventLobbyCoverImage == null) {
+                    document.getElementById("coverImagePreview").style.display = 'none';
+                }
+                if (!event.eventLogo == null) {
+                    document.getElementById("logoPreview").style.display = 'none';
+                }
+            }
+
+            const eventLobbyForm = document.getElementById('eventLobbyForm');
+            eventLobbyForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const formData = new FormData(eventLobbyForm);
+                const data = {
+                    welcomeHeadline: formData.get('welcomeHeadline'),
+                    briefIntroduction: formData.get('briefIntroduction')
+                };
+
+                if (formData.get('eventLobbyCoverImage').size > 0) {
+                    data.eventLobbyCoverImage = formData.get('eventLobbyCoverImage');
+                }
+
+                if (formData.get('eventLogo').size > 0) {
+                    data.eventLogo = formData.get('eventLogo');
+                }
+
+                fetch(`/api/events/${eventId}/customize`, {
+                    method: 'PUT',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(updatedEvent => {
+                    console.log('Event customization saved:', updatedEvent);
+                    alert('Settings saved successfully!');
+                    if (updatedEvent.eventLobbyCoverImage) {
+                        const coverImageElement = document.getElementById("coverImageElement");
+                        coverImageElement.src = updatedEvent.eventLobbyCoverImage;
+                        document.getElementById("coverImagePreview").style.display = 'block';
+                    }
+
+                    if (updatedEvent.eventLogo) {
+                        const logoElement = document.getElementById("logoElement");
+                        logoElement.src = updatedEvent.eventLogo;
+                        document.getElementById("logoPreview").style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    console.error('There was a problem saving the event customization:', error);
+                });
+            });
+
+            // Function to update the event lobby URL and display it
+            function updateEventLobbyURL(event) {
+                // Construct the event lobby URL
+                const eventLobbyURL = `localhost:3000/event_lobby/${eventId}`;
+                // Update the event lobby URL input field
+                document.getElementById("eventURL").value = eventLobbyURL;
+            }
+
+            // Call the function to update the event lobby URL when the page loads
+            updateEventLobbyURL();
+
+            const logoutButton = document.getElementById("logoutButton");
+            logoutButton.addEventListener("click", (event) => {
+                event.preventDefault();
+                const confirmLogout = confirm("Are you sure you want to log out?");
+                if (confirmLogout) {
+                    fetch('/api/auth/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            window.location.href = '/login_signup';
+                        } else {
+                            alert('Logout failed.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was a problem with the logout request:', error);
+                    });
+                }
+            });
+
+            // Function to download attendee list as Excel
+            function downloadAttendeesReport() {
+                const attendeesList = document.querySelectorAll('.attendees-list li');
+                const data = [];
+
+                attendeesList.forEach((attendee, index) => {
+                    const name = attendee.querySelector('span:nth-child(2)').textContent;
+                    const email = attendee.querySelector('span:nth-child(3)').textContent;
+                    data.push({ 'No': index + 1, 'Name': name, 'Email': email });
+                });
+
+                const worksheet = XLSX.utils.json_to_sheet(data);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, "Attendees");
+                XLSX.writeFile(workbook, 'attendees_report.xlsx');
+            }
+
+            // Add event listener to the download attendees button
+            const downloadAttendeesButton = document.getElementById("downloadAttendeesButton");
+            downloadAttendeesButton.addEventListener("click", downloadAttendeesReport);
+
+        });
+
+    </script>
+</body>
+</html>

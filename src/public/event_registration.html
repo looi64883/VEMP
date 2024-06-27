@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Event Registration</title>
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" href="/css/sidebar.css">
+        <style>
+            .event-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 50px;
+            }
+
+            .event-box {
+                display: flex;
+                width: 80%;
+                margin-bottom: 50px;
+            }
+
+            .event-image {
+                flex: 1;
+                max-width: 100%;
+                overflow: hidden; /* Ensures image does not overflow container */
+            }
+
+            .event-image img {
+                width: 100%;
+                height: auto;
+                object-fit: cover; /* Maintains aspect ratio and covers container */
+                max-height: 400px; /* Ensures image doesn't get too tall */
+            }
+
+            .event-details {
+                flex: 2;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 0 20px;
+            }
+            .event-title {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            .event-starts {
+                margin-bottom: 10px;
+            }
+            .register-button {
+                padding: 10px 20px;
+                background-color: #695cfe; /* Button color */
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                text-align: center;
+                transition: background-color 0.3s ease; /* Transition effect */
+            }
+            .register-button:hover {
+                background-color: #563fc7; /* Hover color */
+            }
+            .countdown {
+                font-size: 24px;
+                margin-bottom: 50px;
+            }
+            .event-info {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .event-description {
+                margin-bottom: 20px;
+            }
+            hr {
+                width: 50px;
+                height: 2px;
+                background-color: blue; /* Line color */
+                margin-bottom: 20px;
+                transition: background-color 0.3s ease; /* Transition effect */
+            }
+            hr:hover {
+                background-color: #563fc7; /* Hover color */
+            }
+
+            /* Popup form styles */
+            .popup-form-container {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                justify-content: center;
+                align-items: center;
+            }
+            .popup-form {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                max-width: 400px;
+                width: 90%;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .popup-form h2 {
+                margin-bottom: 20px;
+                text-align: center;
+            }
+            .popup-form input[type="text"],
+            .popup-form input[type="email"] {
+                width: 100%;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                box-sizing: border-box;
+            }
+            .popup-form button {
+                padding: 10px 20px;
+                background-color: #695cfe;
+                color: #fff;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            .close-button {
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                cursor: pointer;
+                font-size: 20px;
+                color: #aaa;
+            }
+
+
+        </style>
+    </head>    
+<body>
+    <div class="event-container">
+        <div class="countdown" id="countdown"></div> <!-- Countdown moved here -->
+        
+        <div class="event-box">
+            <div class="event-image">
+                <img id="eventImage" src="" alt="Event Cover">
+            </div>
+            <div class="event-details">
+                <div>
+                    <div class="event-title" id="eventTitle"></div>
+                    <div class="event-starts" id="eventStarts">
+                       
+                    </div>
+                    <button class="register-button">Register Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="event-info">
+            <h2>Event Information</h2> <!-- Title -->
+            <hr style="width: 50px; height: 2px; background-color: blue;"> <!-- Line separator -->
+            <div class="event-start-date" id="eventStartDate">
+            </div>
+            <div class="event-description" style="margin-top: 10px;" id="eventDescription">
+            </div>
+        </div>            
+        
+    </div>
+
+    <!-- Popup registration form -->
+    <div class="popup-form-container" id="popupFormContainer">
+        <div class="popup-form">
+            <span class="close-button" onclick="togglePopupForm()">&times;</span> <!-- Close button -->
+            <h2>Registration Information</h2>
+            <input type="email" id="email" placeholder="Your email address">
+            <input type="text" id="name" placeholder="Your name">
+            <button id="completeRegistrationBtn">Complete Registration</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Countdown Timer (if needed) -->
+    <script>
+        // JavaScript code for countdown timer
+        // You can implement a countdown timer using JavaScript
+        // Example:
+        // Set the date we're counting down to
+        var countDownDate = new Date("May 23, 2024 09:00:00").getTime();
+
+        // Update the countdown every 1 second
+        var x = setInterval(function() {
+            // Get the current date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the countdown date
+            var distance = countDownDate - now;
+
+            // Calculate days, hours, minutes, and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Display the countdown
+            document.getElementById("countdown").innerHTML = "Registration closes in: " + days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            // If the countdown is over, display a message
+            if (distance < 0) {
+                clearInterval(x);
+                document.getElementById("countdown").innerHTML = "Registration Closed";
+            }
+        }, 1000);
+
+        // Function to reset the registration form fields
+        function resetFormFields() {
+            document.getElementById("email").value = "";
+            document.getElementById("name").value = "";
+        }
+
+        // Function to toggle the display of the popup form
+        function togglePopupForm() {
+            var popupFormContainer = document.getElementById("popupFormContainer");
+            if (popupFormContainer.style.display === "none") {
+                popupFormContainer.style.display = "flex";
+            } else {
+                popupFormContainer.style.display = "none";
+                resetFormFields()
+            }
+        }
+
+        // Add event listener to the Register Now button
+        var registerButton = document.querySelector(".register-button");
+        registerButton.addEventListener("click", togglePopupForm);
+
+        // Fetch event data from the backend API
+        document.addEventListener("DOMContentLoaded", function () {
+            // Extract event ID from URL
+            const eventId = window.location.pathname.split('/').pop();
+
+            // Fetch event details from the backend API
+            fetch(`/api/events/${eventId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(event => {
+                    // Populate HTML elements with event details
+                    document.getElementById("eventImage").src = event.coverImage;
+                    document.getElementById("eventTitle").textContent = event.title;
+                    document.getElementById("eventStarts").innerHTML = `<i class='bx bx-time-five'></i> <span> Starts: ${new Date(event.start).toLocaleString()}</span>`;
+                    document.getElementById("eventStartDate").innerHTML = `<i class='bx bx-time-five'></i> <span>${new Date(event.start).toLocaleString()}</span>`;
+                    document.getElementById("eventDescription").innerHTML = `<p>${event.description}</p>`;
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching event details:', error);
+                });
+        });
+
+        // Add event listener to the Complete Registration button
+        var completeRegistrationBtn = document.getElementById("completeRegistrationBtn");
+        completeRegistrationBtn.addEventListener("click", function() {
+            event.preventDefault();
+            var email = document.getElementById("email").value;
+            var name = document.getElementById("name").value;
+            var eventId = window.location.pathname.split('/').pop();
+
+            console.log(email, name, eventId)
+
+            fetch('/api/register/event', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, name, eventId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                if (data.success) {
+                    resetFormFields();
+                    togglePopupForm();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Registration failed. Please try again.');
+            });
+        });
+    </script>
+</body>
+</html>

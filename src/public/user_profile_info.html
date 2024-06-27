@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="topnav" id="myTopnav">
+        <a href="/user_dashboard" class="active left">Home</a>
+        <a href="/user_feedback" class="right">Submit Feedback</a>
+        <a href="#createevent" class="right">Create New Event</a>
+        <a href="/user_profile" class="right">User Info</a>
+
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+          <i class="fa fa-bars"></i>
+        </a>
+    </div>
+
+    <h1 class="profile-heading">My Profile</h1>
+
+    <div class="profile-card">
+        <div class="profile-picture">
+            <img src="images/user_profile.jpg" alt="Profile Picture">
+        </div>
+        <div class="profile-info">
+            <div class="info-row">
+                <span>Username:</span>
+                <span id="username">User's Username</span>
+            </div>
+            <div class="info-row">
+                <span>Email:</span>
+                <span id="email">user@example.com</span>
+            </div>
+            <div class="info-row">
+                <span>Contact:</span>
+                <input type="text" id="contact" value="1234567890" disabled>
+                <button class="edit-btn" onclick="editField('contact')">Edit</button>
+                <button class="clear-btn" onclick="clearField('contact')">Clear</button>
+            </div>
+            
+            <div class="info-row">
+                <span>Organization:</span>
+                <input type="text" id="organization" value="Company Name" disabled>
+                <button class="edit-btn" onclick="editField('organization')">Edit</button>
+                <button class="clear-btn" onclick="clearField('organization')">Clear</button>
+            </div>
+        </div>
+        <button class="update-btn" onclick="updateProfile()">Update Profile</button>
+    </div>
+  
+    <script src="./javascript/script.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch user information when the page loads
+            fetchUserInfo();
+        });
+
+        // Function to fetch user information
+        function fetchUserInfo() {
+            // Make a GET request to fetch user data
+            fetch("/api/auth/status")
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Populate user information in respective fields
+                    document.getElementById("username").innerText = data.username;
+                    document.getElementById("email").innerText = data.email;
+                    document.getElementById("contact").value = data.contact;
+                    document.getElementById("organization").value = data.organizationName;
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching user data:', error);
+                });
+        }
+
+        // Function to edit a field
+        function editField(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.disabled = false;
+            field.focus();
+            field.addEventListener('blur', function() {
+                field.disabled = true;
+            });
+            field.addEventListener('keydown', function(event) {
+                if (event.key === 'Enter') {
+                    field.blur();
+                }
+            });
+        }
+
+        // Function to clear a field
+        function clearField(fieldId) {
+            document.getElementById(fieldId).value = "";
+        }
+
+        // signup form post and validation
+        async function postData(url = '', data = {}) {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            return response.json();
+        }
+
+        // Function to update the user profile
+        async function updateProfile() {
+        try {
+            // Extract updated organization name and contact from the input fields
+            const organizationName = document.getElementById('organization').value;
+            const contact = document.getElementById('contact').value;
+
+            let response = await postData('/api/update/profile', { organizationName, contact })
+            console.log(response)
+
+
+            // Check if the update was successful
+            if (response.success) {
+                // Display success message to the user
+                alert(response.message);
+                // Reload the profile page to reflect the changes
+                location.reload();
+            } else {
+                // Display error message to the user
+                alert(response.message);
+            }
+
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            // Display error message to the user
+            alert('Failed to update profile. Please try again later.');
+        }
+        }
+
+    </script>
+</body>
+</html>

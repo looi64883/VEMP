@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Lobby</title>
+    <style>
+        /* Style for menubar */
+        .menubar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background-color: rgb(236, 199, 199);
+            color: #333;
+        }
+
+        .event-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .event-logo {
+            width: 221px;
+            height: 110px;
+            margin-right: 20px;
+        }
+
+        .event-details {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .event-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .event-starts {
+            font-size: 18px;
+        }
+
+        /* Style for content */
+        .content {
+            padding: 20px;
+        }
+
+        .event-lobby-cover {
+            width: 100%;
+            height: auto;
+            max-width: 1017px;
+            max-height: 339px;
+            display: block;
+            margin: auto;
+            margin-bottom: 20px;
+        }
+
+        .welcome-headline {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .brief-introduction {
+            font-size: 18px;
+            line-height: 1.5;
+        }
+
+        .join-event-button {
+            padding: 10px 20px;
+            background-color: #695CFE;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .join-event-button:hover {
+            background-color: #563fc7;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menubar" id="menubar">
+    <!-- Event Info will be populated dynamically -->
+</div>
+
+<div class="content" id="content">
+    <!-- Event Details will be populated dynamically -->
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const eventId = window.location.pathname.split('/').pop();
+        fetchEventDetails(eventId);
+
+        function fetchEventDetails(eventId) {
+            fetch(`/api/events/${eventId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(event => {
+                    displayEventDetails(event);
+                })
+                .catch(error => {
+                    console.error('There was a problem fetching event details:', error);
+                });
+        }
+
+        function displayEventDetails(event) {
+            const menubar = document.getElementById("menubar");
+            const eventInfo = document.createElement("div");
+            eventInfo.classList.add("event-info");
+            eventInfo.innerHTML = `
+                <img src="${event.eventLogo}" class="event-logo">
+                <div>
+                    <h2 class="event-title">${event.title}</h2>
+                    <p class="event-starts">${new Date(event.start).toLocaleString()}</p>
+                </div>
+            `;
+            menubar.appendChild(eventInfo);
+
+            const joinEventButton = document.createElement("button");
+            joinEventButton.classList.add("join-event-button");
+            joinEventButton.textContent = "Join Event";
+            joinEventButton.addEventListener("click", () => {
+                window.location.href = `/join_event/${event._id}`;
+            });
+            menubar.appendChild(joinEventButton);
+
+            const content = document.getElementById("content");
+            const eventDetails = document.createElement("div");
+            eventDetails.classList.add("event-details");
+            eventDetails.innerHTML = `
+                <img src="${event.eventLobbyCoverImage}" class="event-lobby-cover">
+                <div>
+                    <h3 class="welcome-headline">${event.welcomeHeadline}</h3>
+                    <p class="brief-introduction">${event.briefIntro}</p>
+                </div>
+            `;
+            content.appendChild(eventDetails);
+        }
+    });
+
+</script>
+
+</body>
+</html>
