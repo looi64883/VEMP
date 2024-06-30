@@ -146,7 +146,7 @@
   }
 
   p{
-      font-size:10px;
+      font-size:14px;
       font-weight:100;
       line-height: 20px;
       letter-spacing: 0.5px;
@@ -154,7 +154,7 @@
   }
 
   span{
-      font-size:12px;
+      font-size:14px;
   }
 
   a{
@@ -173,6 +173,7 @@
   }
 
   button.ghost{
+      margin-top: 20px;
       background-color: transparent;
       border-color: #ffffff;
   }

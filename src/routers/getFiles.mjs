@@ -27,6 +27,10 @@ router.get('/login_signup', (request, response) => {
     response.sendFile(path.join(__dirname, '..', 'public', 'user_login_signup_form.html'));
 });
 
+router.get('/term_privacy', (request, response) => {
+    response.sendFile(path.join(__dirname, '..', 'public', 'terms_privacy.html'));
+});
+
 router.get('/user_dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'user_homepage.html'));
 });

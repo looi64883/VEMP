@@ -48,7 +48,7 @@
         }
 
         .join-event button {
-            background-color: #007bff;
+            background-color: #695cfe;
             color: #fff;
             padding: 10px 20px;
             border: none;
@@ -58,7 +58,7 @@
         }
 
         .join-event button:hover {
-            background-color: #0056b3;
+            background-color: #563fc7;
         }
 
         .join-event p {
@@ -78,6 +78,7 @@
     </style>
 </head>
 <body>
+    <button class="back-button" onclick="goBack()">&lt; Back</button>
     <section id="join-event" class="join-event">
         <h2>Already registered for this event?</h2>
         <div class="form-group">
@@ -90,6 +91,10 @@
     </section>
 
     <script>
+        function goBack() {
+            window.history.back();
+        }
+        
         document.addEventListener("DOMContentLoaded", function() {
             const eventId = window.location.pathname.split('/').pop();
             const registerLink = document.getElementById('registerLink');
@@ -122,9 +127,12 @@
                     .then(data => {
                         const displayName = data.displayName;
                         if (displayName) {
-                            window.location.href = `/video_conference/${eventId}?displayName=${displayName}`;
+                            // Store the displayName in session storage
+                            sessionStorage.setItem('display_name', displayName);
+                            // Redirect to the room page with the invite code
+                            window.location.href = `room.html?room=${eventId}`;
                         } else {
-                            messageElement.textContent = 'Attendee name not found.';
+                            messageElement.textContent = 'Attendee not found.';
                         }
                     })
                     .catch(error => {
