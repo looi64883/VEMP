@@ -128,9 +128,9 @@
                         const displayName = data.displayName;
                         if (displayName) {
                             // Store the displayName in session storage
-                            sessionStorage.setItem('display_name', displayName);
+                            sessionStorage.setItem('display__name', displayName);
                             // Redirect to the room page with the invite code
-                            window.location.href = `room.html?room=${eventId}`;
+                            window.location.href = `/room.html?room=${eventId}`;
                         } else {
                             messageElement.textContent = 'Attendee not found.';
                         }

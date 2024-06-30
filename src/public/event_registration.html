@@ -211,6 +211,14 @@
                 clearInterval(x);
                 document.getElementById("countdown").innerHTML = "Registration Closed";
             }
+
+            let registerStatus = document.getElementById("countdown").value;
+            if(registerStatus === 'Registration Closed'){
+                console.log(registerStatus);
+                document.getElementsByClassName("register-button").disabled = true;
+                document.getElementsByClassName("register-button").style.backgroundColor = "#ccc"; // Change button color to indicate disabled state
+                document.getElementsByClassName("register-button").style.cursor = "not-allowed"; // Change cursor to indicate disabled state
+            }
         }, 1000);
 
         // Function to reset the registration form fields

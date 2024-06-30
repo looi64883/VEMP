@@ -353,7 +353,7 @@
                 startsElement.textContent = "Starts: " + new Date(event.start).toLocaleString();
 
                 const registrationURLInput = document.getElementById("registrationURL");
-                registrationURLInput.value = `https://vemp.onrender.com/registration/${eventId}`;
+                registrationURLInput.value = `localhost:3000/registration/${eventId}`;
 
                 const copyButton = document.getElementById("copyButton");
                 copyButton.addEventListener("click", () => {
@@ -578,7 +578,7 @@
             // Function to update the event lobby URL and display it
             function updateEventLobbyURL(event) {
                 // Construct the event lobby URL
-                const eventLobbyURL = `https://vemp.onrender.com/event_lobby/${eventId}`;
+                const eventLobbyURL = `localhost:3000/event_lobby/${eventId}`;
                 // Update the event lobby URL input field
                 document.getElementById("eventURL").value = eventLobbyURL;
             }
@@ -599,7 +599,7 @@
                     })
                     .then(response => {
                         if (response.ok) {
-                            window.location.href = 'https://vemp.onrender.com/login_signup';
+                            window.location.href = '/login_signup';
                         } else {
                             alert('Logout failed.');
                         }

@@ -138,6 +138,10 @@ router.get('/admin/manage/feedback', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'manage_feedback.html'));
 });
 
+router.get('/room.html', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'room.html'));
+});
+
 // Logout
 router.post('/api/auth/logout', (request, response) => {
     if (!request.user) return response.sendStatus(401);

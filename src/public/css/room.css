@@ -335,14 +335,17 @@
 }
 
 .stream__actions a.active,
-.stream__actions button.active,
+.stream__actions button.active {
+  background-color: #695CFE;
+}
+
 .stream__actions a:hover,
 .stream__actions button:hover {
-  background-color: #845695;
+  background-color: #563fc7;
 }
 
 #join-btn{
-  background-color: #845695;
+  background-color: #695CFE;
   font-size: 18px;
   padding: 25px 50px;
   border: none;
@@ -354,4 +357,8 @@
   left: 50%;
   transform: translateX(-50%);
   cursor: pointer;
+}
+
+#join-btn:hover {
+  background-color: #563fc7
 }

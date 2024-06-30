@@ -111,10 +111,15 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Connect to project database
-mongoose.connect('mongodb://localhost/virtumeet')
+mongoose.connect('mongodb+srv://sthenocw:i39tn72S4VnHf3jA@cluster0.admvxhd.mongodb.net/virtumeet')
     .then(() => console.log('Connected to Database'))
     .catch((err) => console.log(`Error: ${err}`));
+
+
+// Connect to project database
+// mongoose.connect('mongodb://localhost/virtumeet')
+//     .then(() => console.log('Connected to Database'))
+//     .catch((err) => console.log(`Error: ${err}`));
 
 app.use(express.static('./src/public'));
 
