@@ -449,7 +449,7 @@ app.post('/api/register/event', registerEventValidationSchema, async (req, res) 
             from: 'looientertaincw@gmail.com',
             to: email,
             subject: 'Event Registration Confirmation',
-            text: `Hello ${name},\n\nYou have successfully registered for the event. We look forward to seeing you there!\n\nBest regards,\nEvent Team`
+            text: `Hello ${name},\n\nYou have successfully registered for the event. We look forward to seeing you there! You could join the event with the link https://vemp.onrender.com/event_lobby/${eventId} when the event starts.\n\nBest regards,\nEvent Team`
         };
 
         transporter.sendMail(mailOptions, (error, info) => {
