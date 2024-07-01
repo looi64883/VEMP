@@ -142,6 +142,10 @@ router.get('/room.html', async (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'public', 'room.html'));
 });
 
+router.get('/about_us', async (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'about_us.html'));
+});
+
 // Logout
 router.post('/api/auth/logout', (request, response) => {
     if (!request.user) return response.sendStatus(401);
