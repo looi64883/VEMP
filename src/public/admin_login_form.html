@@ -56,15 +56,16 @@
     </style>
 </head>
 <body>
-
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <div id="error-message" style="color: red; margin-bottom: 10px;"></div> <!-- New error message container -->
-        <form id="login-form" onsubmit="loginAdmin()">
-            <input type="text" name="username" id="username" placeholder="Username" required>
-            <input type="password" name="password" id="password" placeholder="Password" required>
-            <button type="submit" id="login_submit">Login</button>
-        </form>
+    <div>
+        <div class="login-container">
+            <h2>Admin Login</h2>
+            <div id="error-message" style="color: red; margin-bottom: 10px;"></div> <!-- New error message container -->
+            <form id="login-form" onsubmit="loginAdmin()">
+                <input type="text" name="username" id="username" placeholder="Username" required>
+                <input type="password" name="password" id="password" placeholder="Password" required>
+                <button type="submit" id="login_submit">Login</button>
+            </form>
+        </div>
     </div>
 
     <script>

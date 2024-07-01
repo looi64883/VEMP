@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="/css/footer.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,6 +76,17 @@
             margin-right: 10px;
             color: #007bff;
         }
+
+        .footer {
+              background-color: #f8f9fa;
+              padding: 20px 0;
+              text-align: center;
+              width: 100%;
+          }
+          .footer p {
+              margin: 0;
+              color: black;
+          }
     </style>
 </head>
 <body>
@@ -97,6 +109,7 @@
         <!-- Feedback items will be inserted here dynamically -->
     </ul>
 </div>
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         fetchLatestFeedback();

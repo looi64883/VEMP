@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Join Event</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/footer.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -79,7 +80,7 @@
 </head>
 <body>
     <button class="back-button" onclick="goBack()">&lt; Back</button>
-    <section id="join-event" class="join-event">
+    <section id="join-event" class="join-event" style="margin-top: 150px;">
         <h2>Already registered for this event?</h2>
         <div class="form-group">
             <label for="email">Enter your email:</label>
@@ -89,6 +90,13 @@
         <p id="message" style="color: red;"></p>
         <p>Not yet registered for the event? <a id="registerLink" href="#">Click here to register now</a></p>
     </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 100px;">
+        <div>
+            <p>&copy; 2024 VEMP, LLT. All Rights Reserved.</p>
+        </div>
+    </footer>
 
     <script>
         function goBack() {
